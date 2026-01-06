@@ -11,7 +11,12 @@ import {
   urlFor,
 } from '@/lib/sanity';
 import { portableTextComponents } from '@/components/PortableTextComponents';
+import { CaseWorthCard } from '@/components/CaseWorthCard';
+import { TableOfContents } from '@/components/TableOfContents';
+import { InlineCTA } from '@/components/InlineCTA';
+import { getQuestionnaireUrl, getCategoryDisplayName } from '@/lib/questionnaires';
 import type { Metadata } from 'next';
+import type { PortableTextBlock } from '@portabletext/types';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -61,6 +66,43 @@ function formatCategory(category: string): string {
   return category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
+/**
+ * Split body content to insert CTA after the 2nd paragraph
+ */
+function splitBodyForCTA(body?: PortableTextBlock[]): {
+  beforeCTA: PortableTextBlock[];
+  afterCTA: PortableTextBlock[];
+} {
+  if (!body || body.length === 0) {
+    return { beforeCTA: [], afterCTA: [] };
+  }
+
+  // Find the index after the 2nd paragraph (normal block)
+  let paragraphCount = 0;
+  let splitIndex = 0;
+
+  for (let i = 0; i < body.length; i++) {
+    const block = body[i];
+    if (block._type === 'block' && block.style === 'normal') {
+      paragraphCount++;
+      if (paragraphCount === 2) {
+        splitIndex = i + 1;
+        break;
+      }
+    }
+  }
+
+  // If we didn't find 2 paragraphs, put CTA after first content block
+  if (splitIndex === 0 && body.length > 0) {
+    splitIndex = Math.min(1, body.length);
+  }
+
+  return {
+    beforeCTA: body.slice(0, splitIndex),
+    afterCTA: body.slice(splitIndex),
+  };
+}
+
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
@@ -79,6 +121,13 @@ export default async function BlogPostPage({ params }: Props) {
   const filteredRecentPosts = recentPosts
     .filter(p => p.slug.current !== slug)
     .slice(0, 5);
+
+  // Get questionnaire URL and category display name for CTAs
+  const questionnaireUrl = getQuestionnaireUrl(post.categories);
+  const categoryDisplayName = getCategoryDisplayName(post.categories);
+
+  // Split body content for inline CTA insertion
+  const { beforeCTA, afterCTA } = splitBodyForCTA(post.body);
 
   // JSON-LD structured data
   const jsonLd = {
@@ -116,7 +165,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <div className="min-h-screen bg-gradient-hero">
         {/* Back to Blog Link */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
           <Link
             href="/blog"
             className="inline-flex items-center gap-2 text-accent hover:text-accent-hover transition-colors font-semibold"
@@ -127,7 +176,7 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
 
         {/* Article Container */}
-        <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <article className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-text-muted mb-6" aria-label="Breadcrumb">
             <Link href="https://casevalue.law" className="hover:text-text transition-colors">Home</Link>
@@ -194,22 +243,55 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Article Body */}
-          <div className="prose prose-invert prose-lg max-w-none">
-            {post.body && (
-              <PortableText
-                value={post.body}
-                components={portableTextComponents}
-              />
-            )}
-          </div>
+          {/* Two-column layout for article body + sidebar */}
+          <div className="grid lg:grid-cols-12 gap-8">
+            {/* Main Content Column */}
+            <div className="lg:col-span-8">
+              {/* Article Body - Before CTA */}
+              <div className="prose prose-invert prose-lg max-w-none">
+                {beforeCTA.length > 0 && (
+                  <PortableText
+                    value={beforeCTA}
+                    components={portableTextComponents}
+                  />
+                )}
+              </div>
 
-          {/* Disclaimer */}
-          <div className="mt-12 p-6 bg-yellow-500/10 border-2 border-yellow-500/30 rounded-xl">
-            <p className="text-sm text-yellow-200/90">
-              <strong>Disclaimer:</strong> This blog post is for informational purposes only and does not constitute legal advice.
-              For specific legal guidance regarding your situation, please consult with a qualified attorney.
-            </p>
+              {/* Inline CTA */}
+              <InlineCTA
+                questionnaireUrl={questionnaireUrl}
+                categoryName={categoryDisplayName}
+              />
+
+              {/* Article Body - After CTA */}
+              <div className="prose prose-invert prose-lg max-w-none">
+                {afterCTA.length > 0 && (
+                  <PortableText
+                    value={afterCTA}
+                    components={portableTextComponents}
+                  />
+                )}
+              </div>
+
+              {/* Disclaimer */}
+              <div className="mt-12 p-6 bg-yellow-500/10 border-2 border-yellow-500/30 rounded-xl">
+                <p className="text-sm text-yellow-200/90">
+                  <strong>Disclaimer:</strong> This blog post is for informational purposes only and does not constitute legal advice.
+                  For specific legal guidance regarding your situation, please consult with a qualified attorney.
+                </p>
+              </div>
+            </div>
+
+            {/* Sidebar Column - Hidden on mobile */}
+            <aside className="hidden lg:block lg:col-span-4">
+              <div className="sticky top-24 space-y-6">
+                {/* Case Worth Card */}
+                <CaseWorthCard questionnaireUrl={questionnaireUrl} />
+
+                {/* Table of Contents */}
+                <TableOfContents body={post.body} />
+              </div>
+            </aside>
           </div>
         </article>
 

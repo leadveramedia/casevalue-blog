@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig: NextConfig = {
   // Load static assets from Vercel directly when proxied through Netlify
   // This ensures CSS/JS loads correctly when blog is accessed via casevalue.law/blog
-  assetPrefix: 'https://casevalue-blog.vercel.app',
+  // Only apply in production - use localhost for development
+  assetPrefix: isProd ? 'https://casevalue-blog.vercel.app' : undefined,
 
   // Allow external images from Sanity CDN and Unsplash
   images: {

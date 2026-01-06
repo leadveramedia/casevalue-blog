@@ -2,6 +2,35 @@ import Image from 'next/image';
 import { urlFor, generateSrcSet } from '@/lib/sanity';
 import type { PortableTextComponents } from '@portabletext/react';
 
+/**
+ * Convert text to a URL-safe slug for heading IDs
+ */
+export function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim();
+}
+
+/**
+ * Extract text content from React children (handles nested elements)
+ */
+function getTextFromChildren(children: React.ReactNode): string {
+  if (typeof children === 'string') {
+    return children;
+  }
+  if (Array.isArray(children)) {
+    return children.map(getTextFromChildren).join('');
+  }
+  if (children && typeof children === 'object' && 'props' in children) {
+    const element = children as { props: { children?: React.ReactNode } };
+    return getTextFromChildren(element.props.children);
+  }
+  return '';
+}
+
 export const portableTextComponents: PortableTextComponents = {
   types: {
     image: ({ value }) => (
@@ -23,12 +52,24 @@ export const portableTextComponents: PortableTextComponents = {
     ),
   },
   block: {
-    h2: ({ children }) => (
-      <h2 className="text-3xl font-bold text-text mt-12 mb-4">{children}</h2>
-    ),
-    h3: ({ children }) => (
-      <h3 className="text-2xl font-bold text-text mt-10 mb-3">{children}</h3>
-    ),
+    h2: ({ children }) => {
+      const text = getTextFromChildren(children);
+      const id = slugifyHeading(text);
+      return (
+        <h2 id={id} className="text-3xl font-bold text-text mt-12 mb-4 scroll-mt-24">
+          {children}
+        </h2>
+      );
+    },
+    h3: ({ children }) => {
+      const text = getTextFromChildren(children);
+      const id = slugifyHeading(text);
+      return (
+        <h3 id={id} className="text-2xl font-bold text-text mt-10 mb-3 scroll-mt-24">
+          {children}
+        </h3>
+      );
+    },
     h4: ({ children }) => (
       <h4 className="text-xl font-bold text-text mt-8 mb-3">{children}</h4>
     ),
