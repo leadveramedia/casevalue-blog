@@ -42,16 +42,19 @@ export const portableTextComponents: PortableTextComponents = {
     ),
   },
   marks: {
-    link: ({ children, value }) => (
-      <a
-        href={value.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-accent hover:text-accent-hover underline font-semibold"
-      >
-        {children}
-      </a>
-    ),
+    link: ({ children, value }) => {
+      const isInternal = value.href?.startsWith('/') || value.href?.includes('casevalue.law');
+      return (
+        <a
+          href={value.href}
+          target={isInternal ? '_self' : '_blank'}
+          rel={isInternal ? undefined : 'noopener noreferrer'}
+          className="text-accent hover:text-accent-hover underline font-semibold"
+        >
+          {children}
+        </a>
+      );
+    },
     strong: ({ children }) => (
       <strong className="font-bold text-text">{children}</strong>
     ),
