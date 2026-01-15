@@ -49,6 +49,14 @@ const categoryQuestionnaireMap: Record<string, string> = {
   'disability': 'https://casevalue.law/#case/disability/0',
   'disability-discrimination': 'https://casevalue.law/#case/disability/0',
 
+  // Worker's compensation
+  'workers-compensation': 'https://casevalue.law/#case/workers_comp/0',
+  'workers-comp': 'https://casevalue.law/#case/workers_comp/0',
+
+  // Social Security Disability
+  'social-security-disability': 'https://casevalue.law/#case/ssdi/0',
+  'ssdi': 'https://casevalue.law/#case/ssdi/0',
+
   // Professional malpractice
   'professional-malpractice': 'https://casevalue.law/#case/professional/0',
   'legal-malpractice': 'https://casevalue.law/#case/professional/0',
