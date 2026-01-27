@@ -77,9 +77,11 @@ export const generateSrcSet = (
 
 /**
  * Fetch all published blog posts, ordered by publish date (newest first)
+ * Now with optional pagination to reduce page size
  */
-export const getAllPosts = async (): Promise<BlogPost[]> => {
-  const query = `*[_type == "blogPost"] | order(publishedAt desc) {
+export const getAllPosts = async (limit?: number): Promise<BlogPost[]> => {
+  const sliceClause = limit ? `[0...${limit}]` : '';
+  const query = `*[_type == "blogPost"] | order(publishedAt desc)${sliceClause} {
     _id,
     title,
     slug,
@@ -92,6 +94,14 @@ export const getAllPosts = async (): Promise<BlogPost[]> => {
     "imageAlt": mainImage.alt
   }`;
 
+  return await client.fetch(query);
+};
+
+/**
+ * Get total count of blog posts
+ */
+export const getPostsCount = async (): Promise<number> => {
+  const query = `count(*[_type == "blogPost"])`;
   return await client.fetch(query);
 };
 

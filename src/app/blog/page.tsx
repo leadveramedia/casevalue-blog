@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, User, ArrowRight } from 'lucide-react';
-import { getAllPosts, urlFor, generateSrcSet } from '@/lib/sanity';
+import { getAllPosts, urlFor } from '@/lib/sanity';
 import { CategoryFilter } from '@/components/CategoryFilter';
 import type { Metadata } from 'next';
+
+// Number of posts to show on the index page (reduces HTML size)
+const POSTS_PER_PAGE = 24;
 
 export const metadata: Metadata = {
   title: 'Legal Blog',
@@ -28,7 +31,7 @@ function formatCategory(category: string): string {
 }
 
 export default async function BlogPage() {
-  const posts = await getAllPosts();
+  const posts = await getAllPosts(POSTS_PER_PAGE);
 
   // Get unique categories from all posts
   const categories = ['all', ...new Set(posts.flatMap(post => post.categories || []))];
