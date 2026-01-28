@@ -23,6 +23,21 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  // Add preconnect headers for critical origins
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Link',
+            value: '<https://cdn.sanity.io>; rel=preconnect, <https://cdn.sanity.io>; rel=dns-prefetch',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
