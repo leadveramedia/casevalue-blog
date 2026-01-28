@@ -75,6 +75,7 @@ export default async function BlogPage() {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       loading={index === 0 ? "eager" : "lazy"}
                       priority={index === 0}
+                      fetchPriority={index === 0 ? "high" : undefined}
                     />
                   </div>
                 )}

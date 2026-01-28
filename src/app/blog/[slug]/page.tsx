@@ -196,6 +196,7 @@ export default async function BlogPostPage({ params }: Props) {
                 height={563}
                 className="w-full h-full object-cover"
                 priority
+                fetchPriority="high"
               />
             </div>
           )}
