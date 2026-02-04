@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s - CaseValue.law',
+    template: '%s',
     default: 'Legal Blog - CaseValue.law',
   },
   description: 'Expert insights on personal injury law, medical malpractice, motor vehicle accidents, and more. Learn about your legal rights and case values.',
