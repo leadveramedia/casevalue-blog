@@ -89,7 +89,7 @@ export const portableTextComponents: PortableTextComponents = {
         <a
           href={value.href}
           target={isInternal ? '_self' : '_blank'}
-          rel={isInternal ? undefined : 'noopener noreferrer'}
+          rel={isInternal ? undefined : `noopener noreferrer${value.rel ? ` ${value.rel}` : ''}`}
           className="text-accent hover:text-accent-hover underline font-semibold"
         >
           {children}
