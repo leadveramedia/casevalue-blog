@@ -1,4 +1,4 @@
-import { DollarSign, CheckCircle } from 'lucide-react';
+import { DollarSign, CheckCircle, ShieldCheck, Lock } from 'lucide-react';
 
 interface CaseWorthCardProps {
   questionnaireUrl: string;
@@ -25,13 +25,25 @@ export function CaseWorthCard({ questionnaireUrl }: CaseWorthCardProps) {
         <a
           href={questionnaireUrl}
           className="block w-full bg-primary text-text font-bold py-3 px-4 rounded-lg hover:bg-primary/80 transition-colors shadow-md text-center"
+          data-cta-name="Start Free Calculator"
+          data-cta-location="sidebar"
         >
           Start Free Calculator
         </a>
 
-        <div className="mt-4 flex items-center justify-center gap-2 text-xs text-text-muted">
-          <CheckCircle className="w-4 h-4 text-green-500" />
-          <span>No contact info required</span>
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center justify-center gap-2 text-xs text-text-muted">
+            <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+            <span>No contact info required</span>
+          </div>
+          <div className="flex items-center justify-center gap-2 text-xs text-text-muted">
+            <ShieldCheck className="w-4 h-4 text-green-500 flex-shrink-0" />
+            <span>Free &amp; confidential</span>
+          </div>
+          <div className="flex items-center justify-center gap-2 text-xs text-text-muted">
+            <Lock className="w-4 h-4 text-green-500 flex-shrink-0" />
+            <span>256-bit encryption</span>
+          </div>
         </div>
       </div>
     </div>

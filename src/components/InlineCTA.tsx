@@ -23,6 +23,8 @@ export function InlineCTA({ questionnaireUrl, categoryName }: InlineCTAProps) {
         <a
           href={questionnaireUrl}
           className="flex-shrink-0 inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-primary font-bold py-3 px-6 rounded-lg shadow-md transition-colors group"
+          data-cta-name="Check Case Worth"
+          data-cta-location="inline-cta"
         >
           Check Case Worth
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

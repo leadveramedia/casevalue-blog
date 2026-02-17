@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, User, ArrowRight } from 'lucide-react';
+import { Calendar, User, ArrowRight, CheckCircle, ShieldCheck, Lock } from 'lucide-react';
 import { getAllPosts, urlFor } from '@/lib/sanity';
 import { CategoryFilter } from '@/components/CategoryFilter';
 import type { Metadata } from 'next';
@@ -45,8 +45,22 @@ export default async function BlogPage() {
             Legal <span className="text-transparent bg-clip-text bg-gradient-gold">Insights</span>
           </h1>
           <p className="text-xl text-text-muted max-w-3xl mx-auto">
-            Expert guidance on personal injury law, case valuations, and your legal rights
+            Understand your rights, learn what affects case value, and make informed decisions about your legal situation.
           </p>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-6 text-sm text-text-muted">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              Free to use
+            </span>
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-green-500" />
+              No signup required
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Lock className="w-4 h-4 text-green-500" />
+              Confidential
+            </span>
+          </div>
         </div>
 
         {/* Category Filter - Client Component */}

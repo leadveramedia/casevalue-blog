@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { PortableText } from '@portabletext/react';
 import { Calendar, User, ArrowLeft, Tag } from 'lucide-react';
 import {
   getPostBySlug,
@@ -10,10 +9,10 @@ import {
   getRelatedPosts,
   urlFor,
 } from '@/lib/sanity';
-import { portableTextComponents } from '@/components/PortableTextComponents';
 import { CaseWorthCard } from '@/components/CaseWorthCard';
 import { TableOfContents } from '@/components/TableOfContents';
 import { InlineCTA } from '@/components/InlineCTA';
+import { SectionedContent } from '@/components/SectionedContent';
 import { getQuestionnaireUrl, getCategoryDisplayName } from '@/lib/questionnaires';
 import type { Metadata } from 'next';
 import type { PortableTextBlock } from '@portabletext/types';
@@ -130,7 +129,7 @@ export default async function BlogPostPage({ params }: Props) {
   const { beforeCTA, afterCTA } = splitBodyForCTA(post.body);
 
   // JSON-LD structured data
-  const jsonLd = {
+  const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -155,12 +154,41 @@ export default async function BlogPostPage({ params }: Props) {
     ],
   };
 
+  const blogPostingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.seo?.metaDescription || post.excerpt,
+    datePublished: post.publishedAt,
+    dateModified: post._updatedAt || post.publishedAt,
+    author: {
+      '@type': 'Organization',
+      name: 'CaseValue.law',
+      url: 'https://casevalue.law',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'CaseValue.law',
+      url: 'https://casevalue.law',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://casevalue.law/blog/${slug}`,
+    },
+    ...(post.mainImage ? { image: urlFor(post.mainImage).width(1200).url() } : {}),
+    url: `https://casevalue.law/blog/${slug}`,
+  };
+
   return (
     <>
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
       />
 
       <div className="min-h-screen bg-gradient-hero">
@@ -251,10 +279,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* Article Body - Before CTA */}
               <div className="prose prose-invert prose-lg max-w-none">
                 {beforeCTA.length > 0 && (
-                  <PortableText
-                    value={beforeCTA}
-                    components={portableTextComponents}
-                  />
+                  <SectionedContent body={beforeCTA} />
                 )}
               </div>
 
@@ -267,10 +292,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* Article Body - After CTA */}
               <div className="prose prose-invert prose-lg max-w-none">
                 {afterCTA.length > 0 && (
-                  <PortableText
-                    value={afterCTA}
-                    components={portableTextComponents}
-                  />
+                  <SectionedContent body={afterCTA} />
                 )}
               </div>
 

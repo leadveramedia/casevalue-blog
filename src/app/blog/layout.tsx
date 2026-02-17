@@ -66,6 +66,8 @@ export default function BlogLayout({
               href="https://casevalue.law"
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent/20 text-accent border-2 border-accent/40 font-semibold"
               aria-label="Go to calculator"
+              data-cta-name="Calculator"
+              data-cta-location="nav"
             >
               <Calculator className="w-5 h-5" />
               <span className="hidden sm:inline">Calculator</span>
@@ -108,6 +110,8 @@ export default function BlogLayout({
           href="https://casevalue.law"
           className="pointer-events-auto w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-10 py-4 bg-gradient-gold hover:opacity-90 text-text-dark rounded-full text-base sm:text-xl font-extrabold shadow-lg hover:shadow-xl transition-all transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-accent/60 whitespace-nowrap"
           aria-label="Calculate your case value"
+          data-cta-name="What's My Case Worth?"
+          data-cta-location="floating-bottom"
         >
           What&apos;s My Case Worth?
           <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />

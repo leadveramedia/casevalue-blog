@@ -1,4 +1,4 @@
-import { slugifyHeading } from './PortableTextComponents';
+import { slugifyHeading } from '@/lib/slugify';
 import type { PortableTextBlock } from '@portabletext/types';
 
 interface TableOfContentsProps {

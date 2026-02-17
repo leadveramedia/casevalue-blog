@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GTMScript } from "@/components/GTMScript";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,8 +21,20 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <GTMScript />
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-N4D25ZFF"
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
+        {children}
+      </body>
     </html>
   );
 }

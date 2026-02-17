@@ -1,18 +1,9 @@
 import Image from 'next/image';
 import { urlFor, generateSrcSet } from '@/lib/sanity';
+import { slugifyHeading } from '@/lib/slugify';
 import type { PortableTextComponents } from '@portabletext/react';
 
-/**
- * Convert text to a URL-safe slug for heading IDs
- */
-export function slugifyHeading(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim();
-}
+export { slugifyHeading };
 
 /**
  * Extract text content from React children (handles nested elements)

@@ -8,6 +8,7 @@ type SanityImageSource = any;
 // Types
 export interface BlogPost {
   _id: string;
+  _updatedAt?: string;
   title: string;
   slug: { current: string };
   excerpt: string;
@@ -111,6 +112,7 @@ export const getPostsCount = async (): Promise<number> => {
 export const getPostBySlug = async (slug: string): Promise<BlogPost | null> => {
   const query = `*[_type == "blogPost" && slug.current == $slug][0] {
     _id,
+    _updatedAt,
     title,
     slug,
     body,
